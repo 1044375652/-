@@ -27,3 +27,22 @@ for(let i = 0 ; i < 10 ; i++){
 
 而let在每次循环中，都会重新声明一次，并且存在块级作用域中，所以才访问不到
 
+## 暂时性死区
+
+暂时性死区的意思是，在变量声明之前，是无法使用该变量的(使用了就报错)
+
+举例
+
+console.log(i);//undefined
+
+var i = 0;
+
+------
+
+console.log(i);//Uncaught ReferenceError: Cannot access 'i' before initialization
+
+let i = 0;
+
+
+在var声明变量，可以提前使用，是因为变量提升。而在let中声明变量，因为暂时性死区，变量必须要声明才能使用，不然就报错！
+暂时性死区的作用其实就是为了代码规范，让开发者习惯先声明，后使用变量的习惯
