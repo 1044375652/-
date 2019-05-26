@@ -78,4 +78,51 @@ console.log(b);
 
 //正确，不会有问题
 
+## 箭头函数
 
+箭头函数与ES5的function关键字的区别
+
+1.箭头函数没有arguments属性(因为访问arguments的性能较差)，使用了剩余运算符替代
+
+```javascript
+let test2 = {
+	'method' : (...args)=>{
+		console.log(args);
+	}
+}
+```
+
+2.箭头函数没有prototype与constructor，所以不能使用new
+
+3.箭头函数的this是绑定的，不像function的this那么飘渺不定的
+
+举例
+
+```javascript
+let test = {
+    'method' : function(){
+        console.log(this);
+    },
+    'method2' : ()=>{
+        console.log(this);
+    },
+    's' : {
+        's' : {
+            's' : {
+                'method' : function(){
+                    console.log(this);
+                },
+                'method2' : ()=>{
+                    console.log(this);
+                }
+            }
+        }
+    }
+}
+
+test.method()//test对象
+test.method2()//window对象
+test.s.s.s.method()//第三个s对象
+test.s.s.s.method2()//windows对象
+
+```
