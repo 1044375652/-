@@ -414,3 +414,17 @@ let arr2 = JSON.parse(JSON.stringify(arr));
 
 最终办法是递归！（目前未写的出来）
 
+
+## 剩余运算符
+
+最常用的就是当作箭头函数的参数
+
+```javascript
+let method = (...args)=>{
+    console.log(args);
+}
+```
+
+
+
+
