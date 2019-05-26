@@ -381,5 +381,36 @@ console.log(iterator.next());
 
 是什么？就是按照一定的格式，从数组或对象或函数的返回值中，提取值，并把它赋值到对应的变量上去
 
+## 扩展运算符
 
+```javascript
+let arr = [1,2,3,4];
+let arr2 = [...arr,5,6,7];
+console.log(arr2);
+```
+
+顺便提一下数组的深拷贝
+
+为什么会出现浅拷贝？
+
+因为数组是用堆去保存的，相等的时候只是把存放的地址拷贝过去了，两个指向了同一个地址，所以在改变其中一个的值，其他的也跟着改变了。
+
+所以如何深拷贝？
+
+最原始的办法就是变量 source数组，然后赋值到 target 数组上
+
+可以利用原始的 for循环，for... in 循环（在for ... in 与 for ... of循环中，for ... of 循环的性能好，因为 for ... in 循环会把对象的prototype一起复制了，而 for ... of 仅复制当前对象的属性），或返回值为数组的方法（map，concat，slice）
+
+上述所说的前提条件，该数组的值都是基本类型。如果有引用类的话，都变成了浅拷贝
+
+所有又出现了一种方法 JSON 对象的 parse 和 stringify 
+
+```javascript
+let arr = [1,2,3];
+let arr2 = JSON.parse(JSON.stringify(arr)); 
+```
+
+但这也有问题，拷贝过后的function以及construtor会丢失
+
+最终办法是递归！（目前未写的出来）
 
