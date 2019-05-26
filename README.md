@@ -308,3 +308,27 @@ console.log(iterator.next());
 
 也许看起来很复杂，但是只要写过一次迭代器的代码，然后接下来的循环就可以无限复用了
 
+
+## 生成器
+
+是什么？生成器是一个返回迭代器的函数。前面我们手动创建过一个迭代器的函数，那个就是生成器
+
+利用ES6我们可以很快速的创建一个生成器
+
+```javascript
+function *createIterator(items){
+    for(let i = 0 ;i < items.length;i++){
+        yield items[i];//yield 上面提到过
+    }
+}
+var iterator = createIterator(['red','green','blue']);
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+```
+
+
+
