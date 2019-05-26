@@ -134,3 +134,68 @@ test.s.s.s.method()//第三个s对象
 test.s.s.s.method2()//windows对象
 
 ```
+## 补充（箭头函数的this到底指向谁？）
+
+举例
+
+如果都是使用箭头函数的话，this就指向最外层的windows
+
+```javascript
+const obj = {
+    b: {
+    	c: () => {console.log(this)}
+	}
+}
+obj.b.c()  //打出的是window对象！！
+```
+
+如果箭头函数与function混合使用的化，那么就有点麻烦（所以建议，要么都是function，要么都是箭头函数）
+
+```javascript
+const obj = {
+    a : function(){
+        let b = {
+            c: () => {console.log(this)}
+        }
+        b.c();    
+    },
+    b: {
+        c: () => {console.log(this)}
+    }
+}
+obj.a()  //打出的是obj对象！！
+obj.b.c()  //打出的是window对象！！
+```
+
+## 补充（箭头函数的this是如何绑定的呢？）
+
+先说以前的function，ES5的this绑定时在运行时绑定的，例如
+
+```javascript
+const obj = {
+    'a' : 1,
+    'method' : function(){
+    console.log(this.a);
+    }
+}
+obj.method();//运行的时候才确定this为obj对象
+obj.method.call({'a' : 2});//使用call改变this的指向，为一个新的对象{'a': 2}
+```
+
+而箭头函数的this是在编译的时候就确定了，箭头函数的this是通过继承获取的
+
+```javascript
+const obj = {
+    'method' : ()=>{
+        const obj = {
+            'method' : ()=>{
+            	console.log(this);//输出都是window对象
+            }
+            obj.method();
+        }
+    }
+}
+obj.method();
+```
+
+
