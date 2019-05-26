@@ -199,5 +199,64 @@ const obj = {
 }
 obj.method();
 ```
+## yield关键字（先看这里，不然下面的迭代器部分看不懂）
+
+在MDN上，对yield的第一句解释就是：
+
+The `yield` keyword is used to pause and resume a generator function.
+yield这个关键字是用来暂停和恢复一个遍历器函数（的运行）的。
+
+个人理解，yield与return非常相似，都有返回值的功能，但是，
+
+return是结束，yield是暂停（关键）。
+
+既然yield是暂停，那么他肯定能回到暂停前的部分。
+
+举例
+
+```javascript
+var foo = function *() { 
+    var x = 1;
+    var y = yield (x + 1);//标记一
+    var z = yield (x + 2);//标记二
+    return z;//标记三
+}();
+var a = foo.next();
+var b = foo.next();
+var c = foo.next();
+```
+
+接下来分析以下这段程序：
+
+在第一个a = foo.next()的时候，程序运行到yield (x + 1)，yield的特性，暂停（不会运行下面的代码）且返回值，所以a.value = 2
+
+到 b = foo.next()，程序从结束的地方开始（即 yield (x + 1)）开始，运行 yield (x + 2)，然后同理暂停（不会运行下面的代码）且返回值，所以b.value = 3
+
+到 c = foo.next()，程序从结束的地方开始（即 yield (x + 2)）开始，return z，然后程序结束了
+
+还有一个是yield传参的问题
+
+举例
+
+```javascript
+var foo = function *() { 
+    var x = 1;
+    var y = yield (x + 1);//标记一
+    var z = yield (x + y);//标记二
+    return z;//标记三
+}();
+var a = foo.next();
+var b = foo.next(1);
+var c = foo.next(2);
+```
+
+第一次运行没有什么特殊之处，
+
+第二次运行我们给next传了一个参数，1.首先同理，我们会回到之前暂停的地方，yield (x + 1)，本来接下来应该是运行 var z = yield(x + y)的，但是我们传了一个参数，1，程序就会把上一个 yield ( x + 1)赋值为1（整个部分），然后y = 1了，然后才运行下面的 var z = yield(x + y)，所以b.value = 2
+
+
+
+最后，yield经常搭配生成器一起使用，接下来会说到，借用一句话 “yield这个关键字是用来暂停和恢复一个遍历器函数（的运行）的”（经典）
+
 
 
