@@ -258,5 +258,53 @@ var c = foo.next(2);
 
 最后，yield经常搭配生成器一起使用，接下来会说到，借用一句话 “yield这个关键字是用来暂停和恢复一个遍历器函数（的运行）的”（经典）
 
+## 迭代器
 
+为什么要使用迭代器？
+
+这是一个循环语句的问题
+
+举例
+
+```javascript
+var colors = ['red','green','blue'];
+    for(var i = 0;i < colors.length;i++){
+    console.log(colors[i]);
+}
+```
+
+我们这个循环，是通过i变量作为数组的索引，从而找到元素的。问题就来了，万一哪天有很多循环层嵌套，一不小心弄错了索引，这就麻烦了。
+
+迭代器的出现就是为了消除这种复杂性以及减少循环中的错误
+
+什么是迭代器呢？
+
+用ES5语法来模拟创建一个迭代器
+
+```javascript
+function createIterator(items){
+    var i = 0;
+    return {
+        next : function(){
+            var done = (i >= items.length);
+            var value = !done ? items[i++] : undefined;
+            return {
+                value : value,
+                done : done
+            }
+        }
+    }
+}
+var iterator = createIterator([1,2,3]);
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+```
+
+所以，我们可以这样定义，迭代器是一个拥有next方法的对象，并且在调用next方法后，会返回一个{value : xxx,done : true|false}的结果对象
+
+也许看起来很复杂，但是只要写过一次迭代器的代码，然后接下来的循环就可以无限复用了
 
