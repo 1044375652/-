@@ -330,5 +330,52 @@ console.log(iterator.next());
 console.log(iterator.next());
 ```
 
+## 可迭代对象
+
+是什么？就是拥有迭代器的对象。在ES6中，所有的集合对象（数组，Set，Map）和字符串都是可迭代对象，可迭代对象都绑定了默认的迭代器
+
+不得fo不提及以下ES6的 for ... of 循环
+
+```javascript
+let colors = ['red','green','blue'];
+for(value of colors){
+    console.log(value);
+}
+```
+
+for ... of 循环的原理就是利用了迭代器，首先在 value of colors中，其实就是判断 done是否为false，
+
+然后输出的value，其实就是迭代对象的value属性
+
+所以，我们可以写出以下代码
+
+```javascript
+function createIterator(items){
+    let i = 0;
+    return {
+        next : ()=>{
+            let done = (i >= items.length);
+            let value = !done ? items[i++] : undefined;
+            return value;
+        }
+    }
+}
+let iterator = createIterator(['red','green','blue']);
+while(value = iterator.next()){
+console.log(value);
+}
+```
+
+所以，可迭代对象其实都有一个默认迭代器，可用 Symbol.iterator方法获得
+
+```javascript
+let colors = ['red','green','blue'];
+let iterator = colors[Symbol.iterator]();
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+```
+
 
 
