@@ -377,5 +377,9 @@ console.log(iterator.next());
 console.log(iterator.next());
 ```
 
+## 解构
+
+是什么？就是按照一定的格式，从数组或对象或函数的返回值中，提取值，并把它赋值到对应的变量上去
+
 
 
