@@ -425,6 +425,31 @@ let method = (...args)=>{
 }
 ```
 
+# -Day 02(阅读ES6)
+## Promise
+promise
 
+首先得提一下，javascript是单线程的，但是如果要实现异步编码，如果做到呢？在很久很久以前，我们是通过回调函数来实现的
 
+例如
+
+```javascript
+function method(cb){
+    setTimeout(function(){
+        console.log('method');
+        cb();
+    },1000);
+    ...
+}
+
+function method2(){
+	console.log('method2');
+}
+```
+
+这样就简单的实现了异步编程的效果（在method完成后，才调用method2，而不影响method内其余代码的运行）
+
+但是问题就来了，上面仅仅只是一级回调而已，如果出现多级回调呢？代码就会变得十分难看。所以，就出现了promise。
+
+promise干了什么呢？他封装了回调方式的异步编码，使得代码更加有次序，并且做了更多的处理（例如捕获异常等）
 
