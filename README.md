@@ -454,4 +454,87 @@ method(method2);
 promise干了什么呢？他封装了回调方式的异步编码，使得代码更加有次序，并且做了更多的处理（例如捕获异常等）
 
 # Day 03(Vue学习)
+## 组件
+
+全局组件
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<my-components></my-components>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	Vue.component('my-components',{//第一个参数为组件名（注意，组件名采用中划线分割）
+		data : function(){
+			return {
+				
+			}
+		},
+		template : `
+			<p>i am component</p>
+		`
+	});
+	let app = new Vue({
+		el : '#app',
+		data : {
+			message : "hello"
+		}
+	});
+</script>
+</body>
+</html>
+```
+
+
+
+局部组件
+
+
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<my-components></my-components>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let myComponents = {//局部组件通常我们用一个变量来存储
+		data : function(){
+			return {
+				//为什么局部组件采用这种方式返回data?
+                 //如果我们要用到局部组件，那么实例化的每一个局部组件都是一个独立的个体
+                 //如果仅仅是 data : {...}这样返回的话，更改其中一个data，就会引起其他				//组件的变化，所以采用function(){返回一个新的对象}
+			}
+		},
+		template : `
+			<p>i am component</p>
+		`
+	}
+	let app = new Vue({
+		el : '#app',
+		components : {
+			'my-components' : myComponents
+		},
+		data : {
+			message : "hello"
+		}
+	});
+</script>
+</body>
+</html>
+```
+
 
