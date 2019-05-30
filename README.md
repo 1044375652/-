@@ -632,4 +632,81 @@ promise干了什么呢？他封装了回调方式的异步编码，使得代码�
 </html>	
 ```
 
+## computed
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		{{changeMessage}}
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let app = new Vue({
+		el : '#app',
+		data : {
+			message : "hello"
+		},
+		computed : {
+			changeMessage : function(){
+				return this.message.toUpperCase();
+			}
+		}
+	});
+</script>
+</body>
+</html>
+```
+
+computed叫计算属性，个人理解，如果数据如需经过某些加工之后，才显示的话，使用计算属性。也许有人说，为什么不直接在methods中定义一个方法来加工数据呢？效果不是一样的吗？虽然效果一样，但computed是由缓冲的。看以下例子：
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		{{changeMessage}}
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let app = new Vue({
+		el : '#app',
+		data : {
+			message : "hello"
+		},
+		computed : {
+			changeMessage : function(){
+				return this.message.toUpperCase() + Date.now();
+			}
+		},
+		methods : {
+			getMessage : function(){
+				return this.message.toUpperCase() + Date.now();
+			}
+		}
+	});
+
+	setInterval(function(){
+		console.log(app.changeMessage);//缓存的证据，可以证明只要this.message没有改变，返回值就不会变
+	},500);
+
+	setInterval(function(){
+		console.log(app.getMessage());
+	},500);
+
+
+</script>
+</body>
+</html>
+```
+
 
