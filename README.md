@@ -600,4 +600,36 @@ promise干了什么呢？他封装了回调方式的异步编码，使得代码�
 
 ​	感觉这个自定义事件，并不是想象中的自定义一个点击事件，感觉就是子组件与父组件的通信方式之一（感觉自己之前想偏了）
 
+## watch监听
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<input type="" name="" v-model='message'>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let app = new Vue({
+		el : '#app',
+		data : {
+			message : "hello"
+		},
+		watch : {
+			message : function(newValue,oldValue){//感觉优点坑的就是监听的函数与
+            //属性名称是一样的，有点无语，但后来想想，既然是监听某个属性，没有必要多命名
+				console.log(newValue,oldValue);
+			}
+		}
+	});
+</script>
+</body>
+</html>	
+```
+
 
