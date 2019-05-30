@@ -537,4 +537,67 @@ promise干了什么呢？他封装了回调方式的异步编码，使得代码�
 </html>
 ```
 
+## 自定义事件
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<my-components @my-event='doSomeThings()'></my-components>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let myComponents = {//局部组件通常我们用一个变量来存储
+		data : function(){
+			return {
+				
+			}
+		},
+		template : `
+			<button @click="event()">i am component</button>
+		`,
+		methods : {
+			event : function(){
+				this.$emit('my-event');
+			}
+		}
+	}
+	let app = new Vue({
+		el : '#app',
+		components : {
+			'my-components' : myComponents
+		},
+		data : {
+			message : "hello"
+		},
+		methods : {
+			doSomeThings : function(){
+				console.log('do Some Things');
+			}
+		}
+	});
+</script>
+</body>
+</html>
+```
+
+先说说使用的步骤吧
+
+1.子组件中先绑定一个事件（例如点击事件）
+
+2.然后点击促发一个函数（我用的是event），然后在函数中调用this.$emit('my-event');//这个是自定义事件名
+
+3.然后在使用的时候<my-components @my-event='doSomeThings()'></my-components>
+
+4.在父组件中书写doSomeThings的逻辑
+
+总结：
+
+​	感觉这个自定义事件，并不是想象中的自定义一个点击事件，感觉就是子组件与父组件的通信方式之一（感觉自己之前想偏了）
+
 
