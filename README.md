@@ -839,7 +839,216 @@ computed叫计算属性，个人理解，如果数据如需经过某些加工之
 ```
 
 ## 组件通信
+先上一个图
 ![image](https://github.com/1044375652/-/blob/master/component.svg)
+
+先简单的说以下（浅入）
+
+父组件向子组件通信，涉及到props属性。子组件向父组件通信，涉及到$emit属性的使用。
+
+先是父组件向子组件通信，代码如下
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<component-a my-prop='父组件向子组件通信'></component-a>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let componentA = {
+		props : ['my-prop'],
+		data : function(){
+			return {}
+		},
+		template : `
+			<p>{{myProp}}</p>
+		`
+	}
+	let app = new Vue({
+		el : '#app',
+		data : {
+			component : 'componentA'
+		},
+		components : {
+			componentA
+		}
+	});
+</script>
+</body>
+</html>
+```
+
+子组件的props可以是数组（上述代码就是数组），也可以是对象。使用对象的话，可以设置很多东西，例如类型检测、自定义验证和设置默认值
+
+代码演示
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<component-a my-prop='父组件向子组件通信'></component-a>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let componentA = {
+		props : {
+			myProp : {
+				type : String,
+				default : 0,
+				required : true,
+				validator : function(value){
+					console.log(value);
+					return true;
+				}
+			}
+		},
+		data : function(){
+			return {}
+		},
+		template : `
+			<p>{{myProp}}</p>
+		`
+	};
+	let app = new Vue({
+		el : '#app',
+		data : {
+			component : 'componentA'
+		},
+		components : {
+			componentA
+		}
+	});
+</script>
+</body>
+</html>
+```
+
+错误演示
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<component-a my-prop='父组件向子组件通信'></component-a>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let componentA = {
+		props : {
+			myProp : {
+				type : 'String',
+				default : 0,
+				required : true,
+				validator : function(value){
+					console.log(value);
+					return true;
+				}
+			}
+		},
+		data : function(){
+			return {}
+		},
+		template : `
+			<p>{{}}</p>
+		`
+	};
+	let app = new Vue({
+		el : '#app',
+		data : {
+			component : 'componentA'
+		},
+		components : {
+			componentA
+		}
+	});
+</script>
+</body>
+</html>
+//报错 Uncaught TypeError: Right-hand side of 'instanceof' is not an object
+//原因 type : 'String',应该是 type : String,
+```
+
+上述就是父组件向子组件通信的其中一个方法；
+
+下面是子组件向父组件通信的一种方法（其实就是使用自定义事件）
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<component-a @my-event='getMessage'></component-a>
+		<p>{{message}}</p>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let componentA = {
+		data : function(){
+			return {
+				childMessage : ''
+			}
+		},
+		template : `
+			<div>
+				<input type='text' v-model='childMessage'>
+				<button @click='sumbitMessage()'>点击向父组件通信</button>
+			</div>		
+		`,
+		methods : {
+			sumbitMessage : function(){
+				this.$emit('my-event',this.childMessage);
+			}
+		}
+	};
+	let app = new Vue({
+		el : '#app',
+		data : {
+			message : ''
+		},
+		components : {
+			componentA
+		},
+		methods : {
+			getMessage : function(message){
+				console.log(message);
+				this.message = message;
+			}
+		}
+	});
+</script>
+</body>
+</html>
+```
+
+有个地方需要注意一下
+
+```javascript
+<component-a @my-event='getMessage()'></component-a> --- 第一种
+<component-a @my-event='getMessage'></component-a> --- 第2种
+```
+
+以前一直使用的是第一种，因为一直没有传递参数，发现没什么所谓，但是后来需要传递参数的时候，就出现问题了。第一种会一直无法接收到参数，因为  getMessage() 就没有传参数。而第2中就可以接收到参数了。
+
 
 
 
