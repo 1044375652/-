@@ -1067,4 +1067,117 @@ props与$emit通信其实是由缺陷的，如果出现了父亲要向孙子或�
 * 4 Vuex 状态管理
 
 ## $attrs 和 $listeners
+$attr
+
+官网的解释
+
+> 包含了父作用域中不作为 prop 被识别 (且获取) 的特性绑定 (`class` 和 `style` 除外)。当一个组件没有声明任何 prop 时，这里会包含所有父作用域的绑定 (`class` 和 `style` 除外)，并且可以通过 `v-bind="$attrs"` 传入内部组件——在创建高级别的组件时非常有用。
+
+$listeners
+
+> 包含了父作用域中的 (不含 `.native` 修饰器的) `v-on` 事件监听器。它可以通过 `v-on="$listeners"` 传入内部组件——在创建更高层次的组件时非常有用。
+
+上述文字得配合代码才看的懂
+
+上代码
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	Vue.component('A', {
+		template: `
+			<div>
+				<p>this is parent component!</p>
+				<B :messageC = "messageC" :messageB="messageB" v-on:CData="CData" v-on:BData="BData"></B>
+			</div>
+		`,
+		data() {
+			return {
+				messageB: 'B',
+				messageC: 'C' //传递给c组件的数据
+			}
+		},
+		methods: {
+		// 执行B子组件触发的事件
+			BData(val) {
+				console.log(`这是来自B组件的数据：${val}`);
+			},
+
+			// 执行C子组件触发的事件
+			CData(val) {
+				console.log(`这是来自C组件的数据：${val}`);
+			}
+		}
+	});
+
+	// 组件B
+	Vue.component('B', {
+		template: `
+			<div>
+				<input type="text" v-model="myMessage" @input="passData(myMessage)">
+				<C v-bind="$attrs" v-on="$listeners"></C>
+			</div>
+		`,
+		props: ['messageB'],
+		data(){
+			return {
+				myMessage: this.messageB
+			}
+		},
+		methods: {
+			passData(val){
+			//触发父组件中的事件
+				this.$emit('BData', val);
+			}
+		}
+	});
+
+	// 组件C
+	Vue.component('C', {
+		template: `
+			<div>
+				<input type="text" v-model="$attrs.messageC" @input="passCData($attrs.messageC)">
+			</div>
+		`,
+		methods: {
+			passCData(val) {
+			// 触发父组件A中的事件
+				this.$emit('CData',val);
+			}
+		}
+	});
+
+	var app=new Vue({
+	el:'#app',
+	template: `
+		<div>
+			<A />
+		</div>
+	`
+	});
+</script>
+</body>
+</html>
+```
+
+配合代码一起理解
+
+$attr其实对应得就是props，那这句
+
+> 包含了父作用域中不作为 prop 被识别 (且获取) 的特性绑定
+
+我们观察一个 B 组件，B组件的 props 仅仅接收了 messageB 属性，但是在传参数的时候，传了 messageB 与 messageC 。所以，$attr 包含了父作用域中不作为 prop 被识别 (且获取) 的特性绑定，即是 messageC。
+
+那么 $listeners 也是一样的，不过 $listeners 对应的是自定义事件罢了。
+
 
