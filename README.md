@@ -709,4 +709,133 @@ computed叫计算属性，个人理解，如果数据如需经过某些加工之
 </html>
 ```
 
+# Day 04(Vue学习)
+## is
+
+先上个代码
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<component-a></component-a>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let componentA = {
+		data : function(){
+			return {}
+		},
+		template : `
+			<p>123</p>
+		`
+	}
+	let app = new Vue({
+		el : '#app',
+		components : {
+			componentA
+		}
+	});
+</script>
+</body>
+</html>
+```
+
+上诉代码主要想表达组件的使用方法。我们想要使用一个组件，有局部和全局（上诉代码是局部组件）。为什么讲 is 之前先讲组件的使用呢？因为 is 就是关系到动态组件的使用。
+
+下面先上一个静态 is 的用法
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<div is='componentA'>
+			
+		</div>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let componentA = {
+		data : function(){
+			return {}
+		},
+		template : `
+			<p>静态is的使用</p>
+		`
+	}
+	let app = new Vue({
+		el : '#app',
+		components : {
+			componentA
+		}
+	});
+</script>
+</body>
+</html>
+```
+
+现在使用动态 is
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<div :is='component'>
+			
+		</div>
+		<button @click='toggle'>toggle</button>
+	</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script type="text/javascript">
+	let componentA = {
+		data : function(){
+			return {}
+		},
+		template : `
+			<p>我是组件componentA</p>
+		`
+	}
+	let componentB = {
+		data : function(){
+			return {}
+		},
+		template : `
+			<p>我是组件componentB</p>
+		`
+	}
+	let app = new Vue({
+		el : '#app',
+		data : {
+			component : 'componentA'
+		},
+		components : {
+			componentA,
+			componentB
+		},
+		methods : {
+			toggle : function(){
+				this.component = (this.component === 'componentA') ? 'componentB' : 'componentA';
+			}
+		}
+	});
+</script>
+</body>
+</html>
+```
+
 
