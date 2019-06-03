@@ -1182,6 +1182,7 @@ $attr其实对应得就是props，那这句
 
 ## $children与$parent
 
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -1230,3 +1231,5 @@ $attr其实对应得就是props，那这句
 	</script>
 </body>
 </html>
+```
+
