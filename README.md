@@ -1180,4 +1180,53 @@ $attr其实对应得就是props，那这句
 
 那么 $listeners 也是一样的，不过 $listeners 对应的是自定义事件罢了。
 
+## $children与$parent
 
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<p>父组件的{{message}}</p>
+		<button @click='click()'>change son</button>
+		<component-b></component-b>
+	</div>
+	<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+	<script type="text/javascript">
+		let componentB = {
+			data : function(){
+				return {
+					message : '123'
+				}
+			},
+			methods : {
+				click : function(){
+					this.$parent.message = Date.now();
+				}
+			},
+			template : `
+				<div>
+					<p>{{message}}</p>
+					<button @click='click()'>change father</button>
+				</div>
+			`
+		}
+		let app = new Vue({
+			el : '#app',
+			data : {
+				message : 'father message'
+			},
+			methods : {
+				click : function(){
+					this.$children[0].message = Date.now();//修改子组件的message
+				}
+			},
+			components : {
+				'componentB' : componentB
+			}
+		});
+	</script>
+</body>
+</html>
