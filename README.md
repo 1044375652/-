@@ -1059,4 +1059,6 @@ computed叫计算属性，个人理解，如果数据如需经过某些加工之
 props与$emit通信其实是由缺陷的，如果出现了父亲要向孙子或更下一级通信，那么就十分麻烦
 例如:
 ![image](https://user-gold-cdn.xitu.io/2019/2/28/16933d8755b48f7a?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
-
+A向B，B向C,B向D通信使用props,$emit是不错的选择，但如果A向C,A向D，就不是那么好了。
+所以，出现了以下这种方式通信
+* 1
