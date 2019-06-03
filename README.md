@@ -841,7 +841,7 @@ computed叫计算属性，个人理解，如果数据如需经过某些加工之
 ## 组件通信
 例如我的账号是itmyhome2013 仓库为readme_add_pic 下面有个images文件 里面有图片nongshalie.jpg
 
-![image](http://github.com/1044375652/-/master/components.svg)
+![image](https://github.com/1044375652/-/blob/master/component.svg)
 
 ![未命名文件](C:\Users\Qiu\Desktop\未命名文件.svg)
 
