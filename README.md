@@ -1557,6 +1557,167 @@ vue 里的 transition 有一个mode（模式），默认是 'in-out'，意思就
 在官网的条件渲染中，提到 key 管理复用的元素。所以，出现以上效果是因为 Vue 为了尽可能高效渲染元素，通常会采用复用元素的策略。所以要想不让他复用，我们可以通过设置不同的 key 或 不要用两个 p 标签即可。
 
 
+## transition 与 JS 钩子
+
+> <transition
+> v-on:before-enter="beforeEnter"
+> v-on:enter="enter"
+> v-on:after-enter="afterEnter"
+> v-on:enter-cancelled="enterCancelled"
+> v-on:before-leave="beforeLeave"
+> v-on:leave="leave"
+> v-on:after-leave="afterLeave"
+> v-on:leave-cancelled="leaveCancelled"
+>
+> <!-- ... -->
+> </transition>
+
+引入官网的一段代码，我们可以通过不同阶段的事件绑定自定义的函数，然后在自定义的函数里制作动画效果即可
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+	<div id="app">
+		<transition
+		v-on:before-enter="beforeEnter"
+		v-on:enter="enter"
+		v-on:after-enter="afterEnter"
+		v-on:enter-cancelled="enterCancelled"
+
+		v-on:before-leave="beforeLeave"
+		v-on:leave="leave"
+		v-on:after-leave="afterLeave"
+		v-on:leave-cancelled="leaveCancelled"
+		v-bind:css='false'
+		>
+			<p v-show='show'>123</p>
+		</transition>	
+		
+		<button @click='show = !show'>toggle</button>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+	<script type="text/javascript">
+		let app = new Vue({
+			el : '#app',
+			data : {
+				show : true
+			},
+			methods: {
+				beforeEnter: function (el) {
+					console.log('beforeEnter');
+					console.log(el);
+				},
+				enter: function (el, done) {
+					console.log('enter');
+					console.log(el);
+					done();
+				},
+				afterEnter: function (el) {
+					console.log('afterEnter');
+					console.log(el);
+				},
+				enterCancelled: function (el) {
+					console.log('enterCancelled');
+					console.log(el);
+				},
+				beforeLeave: function (el) {
+					console.log('beforeLeave');
+					console.log(el);
+				},
+				leave: function (el, done) {
+					console.log('leave');
+					console.log(el);
+					done();
+				},
+				afterLeave: function (el) {
+					console.log('afterLeave');
+					console.log(el);
+				},
+				leaveCancelled: function (el) {
+					console.log('leaveCancelled');
+					console.log(el);
+				},
+				enterdo : function(){
+					console.log('我是enter do');
+				},
+				leavedo : function(){
+					console.log('leave do');
+				}
+			}			
+		});
+	</script>
+</body>
+</html>
+```
+
+注意：当只用 JavaScript 过渡的时候，**在 enter 和 leave 中必须使用 done 进行回调**。否则，它们将被同步调用，过渡会立即完成。
+
+如果在 enter 与 leave 中没有调用 done()的话，不会出现 afterEnter 与 afterLeave；但是会出现 enterCancelled 与 leaveCancelled
+
+> 
+>
+> ```html
+> <!DOCTYPE html>
+> <html>
+> <head>
+>     <title></title>
+> </head>
+> <body>
+> 	<div id="app">
+> 		<button @click="show = !show">
+> 			Toggle
+> 		</button>
+> 		<transition
+> 			v-on:before-enter="beforeEnter"
+> 			v-on:enter="enter"
+> 			v-on:leave="leave"
+> 			v-bind:css="false"
+> 		>
+> 			<p v-if="show">
+> 				Demo
+> 			</p>
+> 		</transition>
+> 	</div>
+> 	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+> 	<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+> 	<script type="text/javascript">
+> 		let app = new Vue({
+> 			el: '#app',
+> 			data: {
+> 				show: false
+> 			},
+> 			methods: {
+> 				beforeEnter: function (el) {
+> 					el.style.opacity = 0;
+> 					el.style.transformOrigin = 'left';
+> 				},
+> 				enter: function (el, done) {
+> 					Velocity(el, { opacity: 1, fontSize: '1.4em' }, { duration: 300 });
+> 					Velocity(el, { fontSize: '1em' }, { complete: done });
+> 				},
+> 				leave: function (el, done) {
+> 					Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 });
+> 					Velocity(el, { rotateZ: '100deg' }, { loop: 2 });
+> 					Velocity(el, {
+> 						rotateZ: '45deg',
+> 						translateY: '30px',
+> 						translateX: '30px',
+> 						opacity: 0
+> 						}, { complete: done });
+> 				}
+> 			}
+> 		});
+> 	</script>
+> </body>
+> </html>
+> ```
+>
+> 引用官网的一个例子
+
 
 
 
