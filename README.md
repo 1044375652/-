@@ -1949,4 +1949,42 @@ bind > inserted，update 与 componentUpdated 是在指令更新的时候才触�
 - 好了之后输入 npm run dev就可以跑起来了
 - 个人建议，想使用vue-cli构建项目，前提要对es6了解，并且了解vue，不然看不懂
 
+## 阅读 Vue Router
+
+动态路由匹配
+
+假如，我们有一个 `User` 组件，对于所有 ID 各不相同的用户，都要使用这个组件来渲染，那么可以这样
+
+```javascript
+const router = new VueRouter({
+    routes : [
+        {
+            path:'/user/:id',
+            component : User
+        }
+    ]
+});
+```
+
+在路径后添加冒号加参数即可。但是这有个问题，就是你如果仅仅只访问 /user，没有带上id，他是识别不了的。所以一般我们都会设置一个错误页面（当访问到不存在的 url 时，需要用到）。
+
+```javascript
+const router = new VueRouter({
+    routes : [
+        {
+            path:'/user/:id',
+            component : User
+        },
+        {
+        	path : '*',
+            component : Error
+        }
+    ]
+});
+```
+
+但是注意了，匹配所有的路由，必须放到最后面，因为匹配的优先级是：谁先定义的，谁的优先级就最高。
+
+既然有传参数的方法，那么接受参数的方法也是有的。例如上述代码，跳转到 User 组件，那么在 User 组件里使用 this.$route.params.id 就能获取到值。
+
 
