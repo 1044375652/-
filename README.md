@@ -1401,3 +1401,55 @@ slot翻译过来就是插槽。顾名思义，我们在组件的 template 定义
 - 然后依据 CSS 类名规范，依旧取名 fade-enter-active,fade-leave-active，fade-enter，fade-leave-active（分别对应动画不同的状态）
 - 然后在类名中赋值 CSS 动画语句即可
 - 自定义类名也是一样的（把 fade 换成自定义类名的名称，CSS 类名也要变
+
+## transition 配合 animate.css 制作动画
+
+直接上代码
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+</head>
+<body>
+	<div id="app">
+		<transition 
+		enter-active-class="animated bounce" leave-active-class='animated bounceOutRight'>
+			<p v-show='show'>123</p>	
+		</transition>	
+		
+		<button @click='show = !show'>toggle</button>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+
+	<script type="text/javascript">
+		let app = new Vue({
+			el : '#app',
+			data : {
+				show : true
+			}
+		});
+	</script>
+</body>
+</html>
+```
+
+- 首先得引入 animate.css
+- 然后根据不同得状态，定义类名
+  - 例如
+  - enter-active-class ：进入的动画
+  - leave-active-class：离开的动画
+  - 还有很多...
+- 加类名的时候，一定要加上 animated 不然动画无效
+- animate 的 github 地址 <https://github.com/daneden/animate.css/>
+- animate 的动画演示地址 <https://daneden.github.io/animate.css/>
+
+
+
+
+
+
+
+
