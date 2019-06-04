@@ -1947,5 +1947,6 @@ bind > inserted，update 与 componentUpdated 是在指令更新的时候才触�
 - 好了之后，进入你项目目录（与package.json同级的目录）
 - 然后输入 npm install 安装依赖
 - 好了之后输入 npm run dev就可以跑起来了
+- 个人建议，想使用vue-cli构建项目，前提要对es6了解，并且了解vue，不然看不懂
 
 
