@@ -1233,3 +1233,99 @@ $attr其实对应得就是props，那这句
 </html>
 ```
 父子组件之间通信还可以用 $children与$parent 这两个简单粗暴的属性，但是官网不推荐使用，有弊端。$children不是响应式的（这个我没有测出来），并且是无序的。父子组件通信推荐使用 props 与 $emit 属性。
+
+
+# Day 05(Vue学习)
+## slot
+
+直接上代码
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+	<div id="app">
+		<component-b>
+			<p>123</p>
+			<p>456</p>
+			<p>789</p>
+		</component-b>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+
+	<script type="text/javascript">
+		let componentB = {
+			data : function(){
+				return {}
+			},
+			template : `
+				<div>
+					<p>header</p>
+					<slot></slot>
+					<p>footer</p>
+				</div>
+				
+			`
+		};
+		let app = new Vue({
+			el : '#app',
+			components : {
+				componentB
+			}
+		});
+	</script>
+</body>
+</html>
+```
+
+slot翻译过来就是插槽。顾名思义，我们在组件的 template 定义了一个 <slot></slot>标签，然后在使用组件的时候，在组件内部添加了 <p>123</p><p>456</p><p>789</p>（接下来称为A），那么，我们添加的 A 会默认插入到 <slot></slot>标签内。如果想要动态指定插入的位置呢？
+
+继续上代码
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+	<div id="app">
+		<component-b>
+			<p slot='first'>123</p>
+			<p slot='first'>456</p>
+			<p slot='second'>789</p>
+		</component-b>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+
+	<script type="text/javascript">
+		let componentB = {
+			data : function(){
+				return {}
+			},
+			template : `
+				<div>
+					<p>header</p>
+					<slot name='first'></slot>
+					<p>footer</p>
+					<slot name='second'></slot>
+				</div>
+				
+			`
+		};
+		let app = new Vue({
+			el : '#app',
+			components : {
+				componentB
+			}
+		});
+	</script>
+</body>
+</html>
+```
+
+所以，想要动态指定位置，我们只需要设置 slot='想要插入位置的名称' 即可
+
