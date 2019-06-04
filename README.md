@@ -1334,6 +1334,8 @@ slot翻译过来就是插槽。顾名思义，我们在组件的 template 定义
 我们可以通过 CSS 类名与 js 事件控制
 
 先说说 CSS 类名控制
+先上一个图
+![image](https://cn.vuejs.org/images/transition.png)
 
 > enter-class - string
 >
