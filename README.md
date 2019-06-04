@@ -1505,6 +1505,57 @@ slot翻译过来就是插槽。顾名思义，我们在组件的 template 定义
 vue 里的 transition 有一个mode（模式），默认是 'in-out'，意思就是先进来再出去，如果向先出去，然后在进来的话，在 transition 里添加 mode= 'out-in'即可
 
 
+## transitiion 的问题
+
+上代码
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+</head>
+<body>
+	<div id="app">
+		<transition
+		enter-active-class="animated bounce" 
+		leave-active-class='animated bounceOutRight'>
+			<p v-if='show'>123</p>	
+			<p v-else>456</p>	
+		</transition>	
+		
+		<button @click='show = !show'>toggle</button>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+	<script type="text/javascript">
+		let componentA = {
+			template : `
+				<p>I am componentA</p>
+			`
+		};
+		let componentB = {
+			template : `
+				<p>I am componentB</p>
+			`
+		};
+		let app = new Vue({
+			el : '#app',
+			data : {
+				show : true
+			}
+		});
+	</script>
+</body>
+</html>
+```
+
+仔细一看好像没什么问题，但是运行跑起来，问题就来了。我的动画效果呢？
+
+经过搜索一番，没有找到答案，但是在手册中找到，应该是答案的答案，上链接<https://cn.vuejs.org/v2/guide/conditional.html>
+
+在官网的条件渲染中，提到 key 管理复用的元素。所以，出现以上效果是因为 Vue 为了尽可能高效渲染元素，通常会采用复用元素的策略。所以要想不让他复用，我们可以通过设置不同的 key 或 不要用两个 p 标签即可。
+
 
 
 
