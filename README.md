@@ -1951,7 +1951,7 @@ bind > inserted，update 与 componentUpdated 是在指令更新的时候才触�
 - 个人建议，想使用vue-cli构建项目，前提要对es6了解，并且了解vue，不然看不懂
 
 ## 阅读 Vue Router
-手册地址<https://router.vuejs.org/>
+手册地址<https://router.vuejs.org/><br/>
 动态路由匹配
 
 假如，我们有一个 `User` 组件，对于所有 ID 各不相同的用户，都要使用这个组件来渲染，那么可以这样
