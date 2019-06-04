@@ -454,6 +454,7 @@ method(method2);
 promise干了什么呢？他封装了回调方式的异步编码，使得代码更加有次序，并且做了更多的处理（例如捕获异常等）
 
 # Day 03(Vue学习)
+手册地址<https://cn.vuejs.org/>
 ## 组件
 
 全局组件
@@ -1950,7 +1951,7 @@ bind > inserted，update 与 componentUpdated 是在指令更新的时候才触�
 - 个人建议，想使用vue-cli构建项目，前提要对es6了解，并且了解vue，不然看不懂
 
 ## 阅读 Vue Router
-
+手册地址<https://router.vuejs.org/>
 动态路由匹配
 
 假如，我们有一个 `User` 组件，对于所有 ID 各不相同的用户，都要使用这个组件来渲染，那么可以这样
@@ -1987,4 +1988,101 @@ const router = new VueRouter({
 
 既然有传参数的方法，那么接受参数的方法也是有的。例如上述代码，跳转到 User 组件，那么在 User 组件里使用 this.$route.params.id 就能获取到值。
 
+## 嵌套路由
 
+先简单的说，我们使用 vue-cli 初始化之后，在 src 目录下会出现 App.vue 这个文件，上代码
+
+```html
+<template>
+  <div id="app">
+    <img src="./assets/logo.png">
+    <router-view/>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App'
+}
+</script>
+
+<style>
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>
+```
+
+当你服务跑起来之后，你会发现我原本没那么多代码，为什么会显示那么多呢？。是因为 router-view，我们在 router 下的 index.js 里配置了路由，当访问根（‘/’）的时候，会加载 Hello World 组件。所以才出现那么多东西的。所以总结一下，router-view 就是根据不同的路由，然后显示不同的组件。问题来了，如果 HelloWorld 中也使用了 router-view ，那么这里面的内容是由谁定义的？又怎么定义呢？（这就是嵌套路由）
+
+第一个问题，还是在 index.js 里面定义即可
+
+```javascript
+import Vue from 'vue'
+import Router from 'vue-router'
+import HelloWorld from '@/components/HelloWorld'
+import One from '@/components/One'
+import Two from '@/components/Two'
+import Error from '@/components/Error'
+
+Vue.use(Router)
+
+export default new Router({
+  mode: 'history',
+  routes: [
+    {
+      path: '/',
+      name: 'HelloWorld',
+      component: HelloWorld
+    },
+    {
+      path: '/123/:id',
+      name: 'One',
+      component: One,
+      children: [
+        {
+          path: 'two',
+          component: Two
+        },
+        {
+          path: '',
+          component: One
+        }
+      ]
+    },
+    {
+      path: '*',
+      component: Error
+    }
+  ]
+})
+
+```
+
+第2个问题，如何定义，例如上述代码
+
+```javascript
+export default new Router({
+  mode: 'history',
+  routes: [
+    {
+      path: '/123/:id',
+      name: 'One',
+      component: One,
+      children: [
+        {
+          path: 'two',
+          component: Two
+        }
+      ]
+    }
+  ]
+})
+```
+
+在由 router-view 的组件里面添加一个 children ，然后跟之前添加 routes 是一样的。有个小细节，path 使用的是相对路径，即不带 '/'，因为带上 '/'就是绝对路径了，会找不到的
