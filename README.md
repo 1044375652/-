@@ -1329,3 +1329,73 @@ slot翻译过来就是插槽。顾名思义，我们在组件的 template 定义
 
 所以，想要动态指定位置，我们只需要设置 slot='想要插入位置的名称' 即可
 
+## transition
+
+我们可以通过 CSS 类名与 js 事件控制
+
+先说说 CSS 类名控制
+
+> enter-class - string
+>
+> leave-class - string
+>
+> appear-class - string
+>
+> enter-to-class - string
+>
+> leave-to-class - string
+>
+> appear-to-class - string
+>
+> enter-active-class - string
+>
+> leave-active-class - string
+>
+> appear-active-class - string
+
+上述是涉及到的类名，一般只用到 enter 与 active
+
+上代码
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style type="text/css">
+    	.fade-enter-active,
+    	.fade-leave-active{
+    		opacity: 0;
+    		transition: all 0.5s;
+    	}
+    	.fade-enter,
+    	.fade-leave-active{
+    		opacity: 0;
+    	}
+    </style>
+</head>
+<body>
+	<div id="app">
+		<transition name='fade'>
+			<p v-show='show'>123</p>
+		</transition>
+		<button @click='show = !show'>toggle</button>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+
+	<script type="text/javascript">
+		let app = new Vue({
+			el : '#app',
+			data : {
+				show : true
+			}
+		});
+	</script>
+</body>
+</html>
+```
+
+- 首先得先给 transition 赋值一个自定义名称（以上是 fade）
+- 然后依据 CSS 类名规范，依旧取名 fade-enter-active,fade-leave-active，fade-enter，fade-leave-active（分别对应动画不同的状态）
+- 然后在类名中赋值 CSS 动画语句即可
+- 自定义类名也是一样的（把 fade 换成自定义类名的名称，CSS 类名也要变
