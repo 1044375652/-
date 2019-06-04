@@ -2086,3 +2086,39 @@ export default new Router({
 ```
 
 在由 router-view 的组件里面添加一个 children ，然后跟之前添加 routes 是一样的。有个小细节，path 使用的是相对路径，即不带 '/'，因为带上 '/'就是绝对路径了，会找不到的
+
+## 导航
+
+我们有声明式导航和编程式导航
+
+先说说声明式
+
+<router-link :to="...">
+
+有点像 HTML 标签，编译之后，在 DOM元素上 <router-link :to="..."> 和 a 标签没有区别
+
+编程式
+
+利用 this.$router.push 方法
+
+```javascript
+// 字符串
+router.push('home')
+
+// 对象
+router.push({ path: 'home' })
+
+// 命名的路由
+router.push({ name: 'user', params: { userId: '123' }})
+
+// 带查询参数，变成 /register?plan=private
+router.push({ path: 'register', query: { plan: 'private' }})
+```
+
+**注意：如果提供了 path，params 会被忽略**
+
+this.$router.push 与 this.$router.replace 类似，但 this.$router.push 会往 history 里添加一条记录，但 this.$router.replace 不会
+
+this.$router.go 其实就是浏览器的前进，后退。
+
+
