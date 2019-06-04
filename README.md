@@ -1447,6 +1447,62 @@ slot翻译过来就是插槽。顾名思义，我们在组件的 template 定义
 - animate 的动画演示地址 <https://daneden.github.io/animate.css/>
 
 
+## transition 与 component
+
+我们可以动态切换 component 并且带上动画，上代码
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+</head>
+<body>
+	<div id="app">
+		<transition
+		enter-active-class="animated bounce" 
+		leave-active-class='animated bounceOutRight'>
+			<p :is='currentComponent'></p>	
+		</transition>	
+		
+		<button @click='changeComponent'>toggle</button>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+	<script type="text/javascript">
+		let componentA = {
+			template : `
+				<p>I am componentA</p>
+			`
+		};
+		let componentB = {
+			template : `
+				<p>I am componentB</p>
+			`
+		};
+		let app = new Vue({
+			el : '#app',
+			data : {
+				currentComponent : 'componentA'
+			},
+			components : {
+				componentA,
+				componentB
+			},
+			methods : {
+				changeComponent : function(){
+					this.currentComponent = (this.currentComponent === 'componentA') ? 'componentB' : 'componentA';
+				}
+			}
+		});
+	</script>
+</body>
+</html>
+```
+
+细心的同学会发现，这个动画有点突兀，即我还没出去，新的先进来的。
+
+vue 里的 transition 有一个mode（模式），默认是 'in-out'，意思就是先进来再出去，如果向先出去，然后在进来的话，在 transition 里添加 mode= 'out-in'即可
 
 
 
