@@ -1718,6 +1718,225 @@ vue 里的 transition 有一个mode（模式），默认是 'in-out'，意思就
 >
 > 引用官网的一个例子
 
+## 自定义指令
+
+为什么需要自定义指令呢？
+
+有的情况下，你仍然需要对普通 DOM 元素进行底层操作，这时候就会用到自定义指令。
+
+举个例子，页面加载完毕，就对输入框聚焦（只能使用vue哦）
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+	<div id="app">
+		<input type="" name="" v-focus>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+	<script type="text/javascript">
+		Vue.directive('focus',{
+			inserted : function(el,binding){
+				el.focus();
+			}
+		});
+		let app = new Vue({
+			el : '#app'
+		});
+	</script>
+</body>
+</html>
+```
+
+相应的钩子函数
+
+- bind
+- inserted
+- update
+- componentUpdated
+- unbind
+
+他们的执行顺序
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+	<div id="app">
+		<input type="" name="" v-focus>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+	<script type="text/javascript">
+		Vue.directive('focus',{
+			bind : function(el,binding){
+				console.log('bind');
+			},
+			inserted : function(el,binding){
+				console.log('inserted');
+			},
+			update : function(el,binding){
+				console.log('update');
+			},
+			componentUpdated : function(el,binding){
+				console.log('componentUpdated');
+			},
+			unbind : function(el,binding){
+				console.log('unbind');
+			}
+		});
+		let app = new Vue({
+			el : '#app'
+		});
+	</script>
+</body>
+</html>
+```
+
+bind > inserted，update 与 componentUpdated 是在指令更新的时候才触发的，unbind 是在指令解除的时候触发的。
+
+有一个问题，就拿上面输入框聚焦的代码来说，我聚焦的代码 el.focus(); 只能放到 inserted 才有用，而在 bind 里却无效，而官方文档说在 bind 里就是用来初始化的，这就有点弄迷糊了。
+
+使用方法：
+
+局部自定义指令
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+	<div id="app">
+		<p v-color="'red'">123</p>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+	<script type="text/javascript">
+		let app = new Vue({
+			el : '#app',
+			directives : {
+				color : {
+					bind : function(el,binding){
+						el.style.color = binding.value;
+					},
+				}
+			}
+		});
+	</script>
+</body>
+</html>
+```
+
+
+
+全局自定义指令
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+	<div id="app">
+		<p v-color="'red'">123</p>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+	<script type="text/javascript">
+		Vue.directive('color',{
+			bind : function(el,binding){
+				el.style.color = binding.value;
+			}
+		});
+		let app = new Vue({
+			el : '#app'
+		});
+	</script>
+</body>
+</html>
+```
+
+在钩子函数中，还有钩子参数，
+
+- el ：指令所绑定的元素，可以用来直接操作 DOM 
+- binding ： 一个对象，包含以下属性：
+  - name：指令名，不包含 v- 前缀
+  - value：指令绑定的表达式的结果，例如 v-color='red == “” '，那么 value 就是 false
+  - oldValue：指令绑定的前一个值，仅在 `update` 和 `componentUpdated` 钩子中可用。
+  - expression：指令绑定的表达式，例如 v-color='red == “” '，那么 expression 就是 red == “”
+  - modifiers：一个包含修饰符的对象，例如，.lazy修饰符，modifiers就是包含修饰符的容器
+- vnode：嘿嘿
+- oldVnode：嘿嘿
+
+> ```html
+> <!DOCTYPE html>
+> <html>
+> <head>
+>     <title></title>
+> </head>
+> <body>
+> 	<div id="hook-arguments-example" v-demo:foo.a.b="message"></div>
+> 	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+> 	<script type="text/javascript">
+> 		Vue.directive('demo', {
+> 			bind: function (el, binding, vnode) {
+> 				var s = JSON.stringify
+> 				el.innerHTML =
+> 					'name: '       + s(binding.name) + '<br>' +
+> 					'value: '      + s(binding.value) + '<br>' +
+> 					'expression: ' + s(binding.expression) + '<br>' +
+> 					'argument: '   + s(binding.arg) + '<br>' +
+> 					'modifiers: '  + s(binding.modifiers) + '<br>' +
+> 					'vnode keys: ' + Object.keys(vnode).join(', ')
+> 				}
+> 		});
+> 
+> 		new Vue({
+> 			el: '#hook-arguments-example',
+> 			data: {
+> 				message: 'hello!'
+> 			}
+> 		});
+> 	</script>
+> </body>
+> </html>
+> ```
+
+自定义指令还有简写的方式
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+	<div id="app">
+		<input type="" name="" v-focus>
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/vue/2.1.3/vue.js"></script>
+	<script type="text/javascript">
+		let app = new Vue({
+			el : '#app',
+			directives : {
+				focus : function(el,binding){
+					el.focus();			
+				}
+			}
+		});
+	</script>
+</body>
+</html>
+```
+
+经过验证，简写的方式，相当于bind
+
 
 
 
