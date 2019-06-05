@@ -2278,7 +2278,7 @@ redirect : function(route){
 
 我们可以为 path 设置别名
 
-```json
+```javascript
 {
     path: '/123',
     name: 'One',
@@ -2288,6 +2288,37 @@ redirect : function(route){
 ```
 
 设置别名之后，访问 /123 与 /456 是一样的
+
+## keep-alive
+
+可以使用来缓冲组件
+
+```html
+<keep-alive>
+	<your-component></your-component>
+</keep-alive>
+```
+
+keep-alive 常与 router-view 配合使用
+
+```html
+<keep-alive>
+	<router-view></router-view>
+</keep-alive>
+```
+
+但是我们直接这样使用，会把所有组件都缓冲下来了。万一我们有些需要缓存，有些又不需要缓冲，则可以这样
+
+```javascript
+export default {
+  name: 'App',
+  meta: {
+    keepAlive: true
+  }
+}
+```
+
+甚至里面还有三个钩子给我们使用，（beforeRouteLeave，beforeRouteEnter，beforeRouteUpdate），他们有三个钩子参数（to,from,next），参数的含义很容易理解，关键是 next，我们在做完一些逻辑处理的时候，要调用 next()，不然不会跳转
 
 
 
