@@ -2121,4 +2121,43 @@ this.$router.push 与 this.$router.replace 类似，但 this.$router.push 会往
 
 this.$router.go 其实就是浏览器的前进，后退。
 
+# Day O6(阅读 Vue Router)
+## 命名路由
+
+上代码
+
+```javascript
+import Vue from 'vue'
+import Router from 'vue-router'
+import HelloWorld from '@/components/HelloWorld'
+
+Vue.use(Router)
+
+export default new Router({
+  mode: 'history',
+  routes: [
+    {
+      path: '/',
+      name: 'HelloWorld',
+      component: HelloWorld
+    }
+  ]
+})
+
+```
+
+这里面的 name : 'HelloWorld' 就是 命名路由
+
+之前我们使用 router-link 跳转是这样的
+
+```html
+<router-link :to='{path : "/"}'>根据path跳转到根目录</router-link>
+```
+
+现在可以使用这样了
+
+```html
+<router-link :to='{name : "One"}'>根据name跳转到根目录</router-link>
+```
+
 
