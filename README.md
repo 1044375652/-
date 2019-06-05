@@ -2160,4 +2160,76 @@ export default new Router({
 <router-link :to='{name : "One"}'>根据name跳转到根目录</router-link>
 ```
 
+## 命名视图
+
+视图是 router-view。
+
+有种情况，就是你的组件中有很多 router-view，那么，如何指定哪个视图加载哪个组件呢？
+
+解决办法就是给视图加上名称
+
+上代码
+
+```html
+<template>
+  <div id="app">
+    <!--    <img src="./assets/logo.png">-->
+    <router-view name='a'/>
+    <router-view name='b'/>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App'
+}
+</script>
+
+<style>
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+  }
+</style>
+
+```
+
+上述代码中，我们分别给两个视图添加了名称（a，b），然后在设置路由的时候这样设置
+
+```javascript
+import Vue from 'vue'
+import Router from 'vue-router'
+import HelloWorld from '@/components/HelloWorld'
+import One from '@/components/One'
+import Two from '@/components/Two'
+
+Vue.use(Router)
+
+export default new Router({
+  mode: 'history',
+  routes: [
+    {
+      path: '/',
+      name: 'HelloWorld',
+      component: HelloWorld
+    },
+    {
+      path: '/123',
+      name: 'One',
+      components: {
+        a: One,
+        b: Two
+      }
+    }
+  ]
+})
+
+```
+
+
+
 
