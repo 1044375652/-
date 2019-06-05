@@ -2230,6 +2230,65 @@ export default new Router({
 
 ```
 
+## 重定向
+
+```javascript
+import Vue from 'vue'
+import Router from 'vue-router'
+import HelloWorld from '@/components/HelloWorld'
+import One from '@/components/One'
+import Two from '@/components/Two'
+import Error from '@/components/Error'
+
+Vue.use(Router)
+
+export default new Router({
+  mode: 'history',
+  routes: [
+    {
+      path: '/',
+      name: 'HelloWorld',
+      component: HelloWorld
+    },
+    {
+      path: '/123',
+      name: 'One',
+      component: One,
+      redirect: '/456'   
+    }
+  ]
+})
+
+```
+
+redirect 不仅可以设置成 path，还可以设置依据 name 来重定向，甚至可以是一个方法（但返回值是一个 url 哦 ）
+
+```javascript
+redirect : {name : '某个 name '}
+```
+
+```javascript
+redirect : function(route){
+	//TODO
+	return '/url'
+}
+```
+
+## 别名
+
+我们可以为 path 设置别名
+
+```json
+{
+    path: '/123',
+    name: 'One',
+    component: One,
+    alias: '/456'
+}
+```
+
+设置别名之后，访问 /123 与 /456 是一样的
+
 
 
 
