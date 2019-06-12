@@ -2370,4 +2370,46 @@ Action，根据个人的理解，其实就是对应着以前 Vue 的 methods。�
 
 就有一个疑问，同步异步为什么要分开来呢？因为 vue 有一个工具，叫 dev-tool ，这个工具的用途就是来追踪 vue 状态的，如果使异步操作，我们是不清楚他是什么时候执行的，即无法追踪。所以，我们如果要使用异步操作，必须在 Action 中编写相应的代码，然后给 Mutation 中执行，这样，我们才能追踪到每一个状态。
 
+# Day 08
 
+## 第一次的update
+
+- 第一个个问题
+
+  - ```javascript
+    component: r => require.ensure([], () => r(require('../page/item/index.vue')), 'item')
+    ```
+
+  - 第一个看到这个不会，经过百度后，这个是 vue-router 的进阶内容 --- 理由懒加载
+
+  - 出现路由懒加载的原因是：当打包构建应用时，JavaScript 包会变得非常大，影响页面加载。如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就更加高效了。
+
+  - 路由懒加载有两种
+
+  - veu-router 官网文档的
+
+  - ```javascript
+    const Foo = () => import(/* webpackChunkName: "group-foo" */ './Foo.vue')
+    const Bar = () => import(/* webpackChunkName: "group-foo" */ './Bar.vue')
+    const Baz = () => import(/* webpackChunkName: "group-foo" */ './Baz.vue')
+    ```
+
+  - github 上 webpack 风格的
+
+  - ```javascript
+    const Foo = r => require.ensure([], () => r(require('./Foo.vue')), 'group-foo')
+    const Bar = r => require.ensure([], () => r(require('./Bar.vue')), 'group-foo')
+    const Baz = r => require.ensure([], () => r(require('./Baz.vue')), 'group-foo')
+    ```
+
+  - 最后
+
+  - ```javascript
+    const router = new VueRouter({
+      routes: [
+        { path: '/foo', component: Foo }
+      ]
+    })
+    ```
+
+  - 个人建议 vue-router 官方文档，因为太简便了
