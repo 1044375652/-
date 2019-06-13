@@ -2503,8 +2503,86 @@ Action，根据个人的理解，其实就是对应着以前 Vue 的 methods。�
 
 - 完善了选项（添加了唯一标识）
 - 添加了把选择好的选项加入到容器中
-- 发送 ajax请求
+- 发送 AJAX 请求
 
 遇到坑的地方：
 
 - ajax请求忘了（复习！）
+
+  - <https://wangdoc.com/javascript/bom/xmlhttprequest.html> 这里讲的很不错，接下来我简单总结一下发起 ajax 请求的步骤
+
+  - 创建 XMLHttpRequest 实例
+
+  - 发出 HTTP 请求
+
+  - 接收服务器传回的数据
+
+  - 更新网页数据
+
+  - ```javascript
+    let xhr;
+    //这里是创建 XMLHttpRequest 实例
+    if(window.XMLHttpRequest){
+       xhr = new XMLHttpRequest()
+       }else{
+           xhr = new ActiveXObject()
+       }
+    //设置监听事件，看是否请求完毕
+    xhr.onreadystatechange = function(){
+      // 通信成功时，状态值为4
+      if (xhr.readyState === 4){
+        if (xhr.status === 200){
+          console.log(xhr.responseText);
+        } else {
+          console.error(xhr.statusText);
+        }
+      }
+    };
+    
+    xhr.onerror = function (e) {
+      console.error(xhr.statusText);
+    };
+    //通过以上定义好了之后，调用open,send 才是真正发起请求
+    xhr.open('GET', '/endpoint', true);
+    xhr.send(null);
+    ```
+
+  - 有些要说的地方
+
+    - onreadystatechange 是 XMLRequest的一个监听事件，监听此次请求是否完成，相对应的，有这个属性readyState
+
+      - 0，表示 XMLHttpRequest 实例已经生成，但是实例的`open()`方法还没有被调用。
+      - 1，表示`open()`方法已经调用，但是实例的`send()`方法还没有调用，仍然可以使用实例的`setRequestHeader()`方法，设定 HTTP 请求的头信息。
+      - 2，表示实例的`send()`方法已经调用，并且服务器返回的头信息和状态码已经收到。
+      - 3，表示正在接收服务器传来的数据体（body 部分）。这时，如果实例的`responseType`属性等于`text`或者空字符串，`responseText`属性就会包含已经收到的部分信息。
+      - 4，表示服务器返回的数据已经完全接收，或者本次接收已经失败。
+
+    - 然后通过 status 才能判断是否成功（上面的 readyState 只是判断请求是否完毕）
+
+    - 然后有点疑惑的地方就是 open 和 send
+
+    - open方法：用于指定 HTTP 请求的参数，或者说初始化 XMLHttpRequest 实例对象。它一共可以接受五个参数。
+
+      - ```javascript
+        void open(
+           string method,
+           string url,
+           optional boolean async,
+           optional string user,
+           optional string password
+        );
+        ```
+
+      - `method`：表示 HTTP 动词方法，比如`GET`、`POST`、`PUT`、`DELETE`、`HEAD`等。
+
+      - `url`: 表示请求发送目标 URL。
+
+      - `async`: 布尔值，表示请求是否为异步，默认为`true`。如果设为`false`，则`send()`方法只有等到收到服务器返回了结果，才会进行下一步操作。该参数可选。由于同步 AJAX 请求会造成浏览器失去响应，许多浏览器已经禁止在主线程使用，只允许 Worker 里面使用。所以，这个参数轻易不应该设为`false`。
+
+      - `user`：表示用于认证的用户名，默认为空字符串。该参数可选。
+
+      - `password`：表示用于认证的密码，默认为空字符串。该参数可选。
+
+    - send方法：用于实际发出 HTTP 请求。它的参数是可选的，如果不带参数，就表示 HTTP 请求只有一个 URL，没有数据体，典型例子就是 GET 请求；如果带有参数，就表示除了头信息，还带有包含具体数据的信息体，典型例子就是 POST 请求。
+
+    - 所以呢，open 其实就是建立连接的，并且初始化，而 send 方法就是塞数据的
