@@ -2495,3 +2495,16 @@ Action，根据个人的理解，其实就是对应着以前 Vue 的 methods。�
   - 他类似于 mutations 的 commit 提交，但是， mutations 是同步的，并且，this.$store.dispatch 它是用来分发 actions 的，然后我们在 actions 中才能调用 mutations 的 commit 提交
 
   - 总而言之，this.$store.dispatch 他是一个异步方法
+ 
+
+## 第三次的update
+
+这次作者完成了什么？
+
+- 完善了选项（添加了唯一标识）
+- 添加了把选择好的选项加入到容器中
+- 发送 ajax请求
+
+遇到坑的地方：
+
+- ajax请求忘了（复习！）
