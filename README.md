@@ -2614,3 +2614,78 @@ Action，根据个人的理解，其实就是对应着以前 Vue 的 methods。�
   - 观看了大神的讲解之后，只要有两个属性 name,http-equiv
 
   - name,http-equiv 都是设置参数的名称，参数的值是设置在 content 中的
+  
+# Day 11（webpack的学习）
+
+## webpack是什么？
+
+- WebPack可以看做是**模块打包机**：它做的事情是，分析你的项目结构，找到JavaScript模块以及其它的一些浏览器不能直接运行的拓展语言（Scss，TypeScript等），并将其转换和打包为合适的格式供浏览器使用。
+
+## 为什么要使用webpack？
+
+- **模块化**
+  - 命名冲突
+  - 文件依赖（js 加载顺序）
+  - 代码复用
+- **这些新兴的技术并不是在所有的浏览器上都适用，都需要将源代码转化为可以直接在浏览器上运行的代码**
+
+## Javascript模块化
+
+在 webpck 中，识别三种：AMD，CommandJS（只能在服务端运行，即 node.js），ES6 module
+
+- AMD语法
+
+  - ```javascript
+    define("module", ["dep1", "dep2"], function(d1, d2) {
+      return someExportedValue;
+    });
+    require(["module", "../file"], function(module, file) { /* ... */ });
+    ```
+
+  - 因为 CommonJS 不适用于浏览器环境，所以出现了 AMD 规范。该规范**异步**加载依赖，可以再声明的时候指定需要加载的依赖，并且需要当做参数传入，对于依赖的模块提前执行，依赖前置（即在运行前，就把需要的依赖加载好了）。
+
+- CommandJS
+
+  - ```javascript
+    // 导入
+    const moduleA = require('./moduleA');
+    
+    // 导出
+    module.exports = moduleA.someFunc;
+    ```
+
+  - node.js 采用的就是 CommonJS 规范，使用 `require` 的方法**同步**加载依赖，一个文件就是一个模块
+
+- ES6 module（webpack 推荐）
+
+  - ```javascript
+    // 导入
+    import { readFile } from 'fs';
+    import React from 'react';
+    // 导出
+    export function hello() {};
+    export default {
+      // ...
+    };
+    ```
+
+## CSS设计模式
+
+### CSS采用设计模式，就是为了以后的维护
+
+- OOCSS
+  - 减少对 HTML 结构依赖
+  - 增加 CSS 的 Class 重复使用
+- SMACSS
+- Atomic CSS
+  - 感觉就是 bootstrap 的思想。把功能分成一个一个的类名，例如，想要红色，就命名一个类，专门负责红色，然后需要的时候，添加这个类名即可
+- MCSS
+- AMCSS
+- BEM（Block Element Modifier）
+  - .block { /* styles */ } // 代表块*
+  - *.block__element { /* styles */ } // 代表元素*
+  - *.block--modifier { /* styles */ } // 代表修饰语
+  - BEM的思想是在命名类名的时候，根据是块（Block），还是块的元素（子元素，Eleme），还是描述块的状态（Modifier），来决定命名规则。
+  - 这样的话，以后维护的时候，能更快找到相对于的元素，以及他的含义
+
+
