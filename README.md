@@ -2690,4 +2690,22 @@ Action，根据个人的理解，其实就是对应着以前 Vue 的 methods。�
   - BEM的思想是在命名类名的时候，根据是块（Block），还是块的元素（子元素，Eleme），还是描述块的状态（Modifier），来决定命名规则。
   - 这样的话，以后维护的时候，能更快找到相对于的元素，以及他的含义
 
+## 打包自己第一个wepkack程序
+
+- 使用 npm install yarn -g 命名安装 yarn
+
+- 新建一个文件夹(webpack-demo)
+
+- yarn add webpack webpack-cli -D（在 webpack 4.0 后，需要安装 webpack-cli，-D的意思是上线不打包 webpack 以及 webpack-cli 模块）
+
+- 进入 webpack-demo 中，新建一个 src 文件夹，然后新建一个 index.js
+
+- ```javascript
+  console.log(123)
+  ```
+
+- 然后在命令行中输入 npx webpack
+
+- 然后会多出一个 dist 文件夹，里面的 main.js 就是打包好后的文件
+
 
