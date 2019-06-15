@@ -2708,4 +2708,38 @@ Action，根据个人的理解，其实就是对应着以前 Vue 的 methods。�
 
 - 然后会多出一个 dist 文件夹，里面的 main.js 就是打包好后的文件
 
+## 样式处理（1）
+
+- 问题：我们在 src 文件夹中的 html 中直接引用 css 文件，是不生效的。因为当打包后，在 dist 文件夹中并没有相应的 css 文件。所以，得引入插件
+
+- yarn add css css-loader -D
+
+- 然后在 webpack.config.js 文件中
+
+- ```javascript
+  module : {
+  	rules:[//解析顺序是从右往左
+  		{
+  			test: /\.css$/
+  			use : [{
+  				loader: 'style-loader' //style-loader是把 css 插入到 head 标签中
+  			},'css-loader'//css-loader 是解析 @import 这种语法的]
+  		}
+  	]
+  }
+  ```
+
+- ```
+  其中,use:[这里可以是数组，还可以是对象]
+  ```
+
+- 上述代码还会出现一些现象，就是 style-loader 会把样式添加到 head 标签的最下面（即优先级最高），那如果想把自己写的样式放到 head 标签的最下面，该怎么办？
+
+- ```
+  在 use : [使用对象]，其中，对象中有一个 insertAt : 'top' 属性，设置即可
+  ```
+
+- 上面演示了如何加载 css-loader，其实其他的，例如 sass，less 也是一样的
+
+
 
