@@ -2742,4 +2742,60 @@ Action，根据个人的理解，其实就是对应着以前 Vue 的 methods。�
 - 上面演示了如何加载 css-loader，其实其他的，例如 sass，less 也是一样的
 
 
+## 样式处理（2）
+
+- 问题：上面将的是在 head 标签中添加 style，但是，能不能打成一个文件呢？使用 link 来引入呢？答案是可以的
+
+- 添加插件 yarn add mini-css-extract-plugin -D
+
+- 然后 index.js 中依旧是
+
+- ```javascript
+  require('./index.css')
+  ```
+
+- 在 webpack.config.js 中
+
+- ```
+  const MinCssExtractPlugin = require('mini-css-extract-plugin')
+  plugins :[
+  	new MinCssExtractPlugin({
+  		filename : 'main.css'//打包出来的css文件名
+  	})
+  ]
+  然后在
+  module : {
+  	rules: [
+              {
+                  test: /\.css$/,
+                  use: [MinCssExtractPlugin.loader, 'css-loader']//把style-loader替换成MinCssExtractPlugin.loader
+              }
+          ]
+  }
+  ```
+
+- 还有一个问题，当我们使用css3的时候，希望加上浏览器的前缀
+
+- ```javascript
+  添加两个插件
+  yarn add postcss-loader autoprefixer -D
+  然后
+  module : {
+  	rules: [
+              {
+                  test: /\.css$/,
+                  use: [MinCssExtractPlugin.loader, 'css-loader'，'postcss-loader']//把style-loader替换成MinCssExtractPlugin.loader
+              }
+          ]
+  }
+  这样还不行，因为postcss-loader需要一个配置文件，叫postcss.config.js
+  在配置文件中填写：
+  module.exports = {
+    plugins : [
+        require('autoprefixer')(['last 2 versions','>0.01%'])
+    ]
+  };
+  ```
+
+
 
