@@ -2797,5 +2797,29 @@ Action，根据个人的理解，其实就是对应着以前 Vue 的 methods。�
   };
   ```
 
+## 压缩css与js文件
 
+- ```javascript
+  yarn add terser-webpack-plugin optimize-css-assets-webpack-plugin -D
+  然后
+  const OptimizeCss = require('optimize-css-assets-webpack-plugin');
+  const TerserWebpackPlugin = require('terser-webpack-plugin');
+  
+  module.exports = {
+      optimization: {
+          minimizer: [
+              new OptimizeCss(),//压缩css的
+              new TerserWebpackPlugin({//压缩js的
+                  cache:true,//是否缓冲
+                  parallel: true,//并发打包
+                  sourceMap:true//源文件与打包出来的文件相映射
+              })
+          ]
+      },
+      ...
+  };
+  
+  ```
+
+  
 
