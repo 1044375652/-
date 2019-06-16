@@ -3023,5 +3023,69 @@ module.exports = {
 };
 ```
 
+## 图片处理
+
+- 用 js 引入图片
+
+  - 需要用到 file-loader
+
+  - 在webpack.config.js添加
+
+    - ```javascript
+      rules: [
+                  {
+                      test: /\.(png|jpg|gif)$/,
+                      use: 'file-loader'
+                  },
+      			...            
+      		]
+      ```
+
+    - ```javascript
+      import logo from './logo.png'
+      let img = new Image();
+      img.src = logo;
+      document.body.appendChild(img);
+      ```
+
+- css引入图片
+
+  - css引入图片没那么麻烦，因为css-loader已经帮我们处理好了，直接引用相应的图片就可以了
+
+- html引入图片
+
+  - 添加一个loader -> yarn add html-withimg-loader
+
+  - ```javascript
+    {
+        test:/\.html$/,
+        use:'html-withimg-loader'
+    }
+    ```
+
+  - 即可
+
+上述的问题，都是因为文件打包后，图片不会自动跟随一起打包，所以会产生图片找不到的情况，但是只要添加一些loader即可。
+
+现在有一个需求，当图片大小不超过某个限制的时候，使用base64编码
+
+- yarn add url-loader -D //这个是base64编码依赖的loader
+
+- ```json
+  {
+      test: /\.(png|jpg|gif)$/,
+      use: [
+          {
+              loader: "url-loader",
+              options: {
+                  limit: 1 * 1024,
+                  fallback: 'file-loader'
+              }
+          }
+      ]
+  }
+  ```
+
+  
 
 
