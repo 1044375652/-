@@ -3087,5 +3087,121 @@ module.exports = {
   ```
 
   
+## 打包文件分类
+
+之前我们打包的文件都是统一在dist文件夹下，可是我想依据文件类型从而把他放到不同的文件夹下呢？
+
+```javascript
+module.exports = {
+    ...
+    ,
+    output: {
+        filename: "js/bundle.js",//在这里设置js文件放置的文件夹
+        path: path.resolve(__dirname, 'dist')
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: "./src/index2.html",
+            filename: "html/index.html"//在这里设置htmk文件放置的文件夹
+        }),
+        new MiniCssExtractPlugin({
+            filename: "css/main.css"//在这里设置css文件放置的文件夹
+        })
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.html$/,
+                use: 'html-withimg-loader'
+            },
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                    {
+                        loader: "url-loader",
+                        options: {
+                            limit: 1 * 1024,
+                            fallback: 'file-loader',
+                            outputPath : 'img/'//在这里设置图片文件放置的文件夹
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader', // css-loader 用来解析@import这种语法,
+                    'postcss-loader'
+                ]
+            }, {
+                include: path.resolve(__dirname, 'src'),
+                exclude: /node_modules/,
+                test: /\.js$/,
+                use: [{
+                    loader: "babel-loader",
+                    options: {
+                        presets: ['@babel/preset-env'],
+                        plugins: [
+                            ["@babel/plugin-proposal-decorators", {"legacy": true}],
+                            ["@babel/plugin-proposal-class-properties", {"loose": true}],
+                            ['@babel/plugin-transform-runtime']
+                        ]
+                    }
+                }]
+            }]
+    }
+};
+
+```
+
+我们或许还有一个需求，就是从cdn中加载我们的文件，那么
+
+```javascript
+module.exports = {
+    ...
+    ,
+    output: {
+        filename: "js/bundle.js",//在这里设置js文件放置的文件夹
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: "https://www.baidu.com"//这里设置cdn的地址，但是，他会把所有文件的引入都设置成cdn的方式，不过我们只想某些文件引用。
+    },
+};
+
+```
+
+```javascript
+module.exports = {
+    ...
+    ,
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: "css/main.css",
+            publicPath: "https://www.baidu.com"//往需要的地方添加 publicPath 属性即可
+        })
+    ],
+    module: {
+        rules: [
+            ...
+            ,
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                    {
+                        loader: "url-loader",
+                        options: {
+                            limit: 1 * 1024,
+                            fallback: 'file-loader',
+                            outputPath : 'img/',
+                            publicPath ：'cdn地址' 
+                        }
+                    }
+                ]
+            },
+                ...]
+    }
+};
+```
+
 
 
