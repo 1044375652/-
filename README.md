@@ -3287,3 +3287,25 @@ module.exports = {
 - module-source-map
 - module-eval-source-map
 
+
+## watch用法
+
+watch是干什么用的呢？可以用watch来实时监控我们的文件，当发生变化之后，自动build，而不再需要人工手动的npm run build
+
+```javascript
+module.exports = {
+    ...
+    ,
+    watch: true,//开启watch功能
+    watchOptions: {//监控的选项
+    	aggregateTimeout : 500//类似与输入框的防抖功能。当我们一直修改同一个文件的时候，打包时间会延长，直到不再修改。这样的好处是避免了一些无谓的打包
+    	ignored : /node_moudules/,//忽略某些文件不用监控，因为我们一定不会修改某些文件
+    	poll : 1000//几秒检查一次
+    },
+    ...
+};
+上述代码的时间的单位都是毫秒
+```
+
+
+
