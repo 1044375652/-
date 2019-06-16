@@ -2879,3 +2879,74 @@ Action，根据个人的理解，其实就是对应着以前 Vue 的 methods。�
 - npm官网（介绍各种插件用法）：<https://www.npmjs.com/>
 - babel官网（介绍各种babel用法）：<https://babeljs.io/>
 
+## 语法校验
+
+```javascript
+let path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+module.exports = {
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 8080
+    },
+    mode: "development",
+    entry: './src/index.js',
+    output: {
+        filename: "bundle.js",
+        path: path.resolve(__dirname, 'dist')
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: "./src/index2.html",
+            filename: "index.html"
+        }),
+        new MiniCssExtractPlugin({
+            filename: "main.css"
+        })
+    ],
+    module: {
+        rules: [
+            {
+                test : /\.js/,
+                include: path.resolve(__dirname,'src'),
+                exclude: /node_modules/,
+                use: {
+                    loader: "eslint-loader"
+                },
+                enforce: "pre"
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader', // css-loader 用来解析@import这种语法,
+                    'postcss-loader'
+                ]
+            }, {
+                include: path.resolve(__dirname, 'src'),
+                exclude: /node_modules/,
+                test: /\.js$/,
+                use: [{
+                    loader: "babel-loader",
+                    options: {
+                        presets: ['@babel/preset-env'],
+                        plugins: [
+                            ["@babel/plugin-proposal-decorators", {"legacy": true}],
+                            ["@babel/plugin-proposal-class-properties", {"loose": true}],
+                            ['@babel/plugin-transform-runtime']
+                        ]
+                    }
+                }]
+            }]
+    }
+};
+
+```
+
+
+
+- 语法校验是通过 eslint 工具实现的，官网：<https://eslint.org/>（在官网可以找到 demo，并且下载配置文件）
+
