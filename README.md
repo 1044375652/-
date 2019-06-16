@@ -2950,3 +2950,78 @@ module.exports = {
 
 - 语法校验是通过 eslint 工具实现的，官网：<https://eslint.org/>（在官网可以找到 demo，并且下载配置文件）
 
+## 全局变量的引入
+
+- 要使用到 expose-loader
+- webpack.ProvidePlugin
+
+```javascript
+let path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require('webpack');
+module.exports = {
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 8080
+    },
+    mode: "development",
+    entry: './src/index.js',
+    output: {
+        filename: "bundle.js",
+        path: path.resolve(__dirname, 'dist')
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: "./src/index2.html",
+            filename: "index.html"
+        }),
+        new MiniCssExtractPlugin({
+            filename: "main.css"
+        }),
+        new webpack.ProvidePlugin({
+            $:'jquery'//这里是把 jquery 暴露给每个模块
+        })
+    ],
+    module: {
+        rules: [
+            {
+                test: require.resolve('jquery'),
+                use: [{//这里是把 jquery 暴露给window
+                    loader: 'expose-loader',
+                    options: 'jQuery'
+                }, {
+                    loader: 'expose-loader',
+                    options: '$'
+                }]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader', // css-loader 用来解析@import这种语法,
+                    'postcss-loader'
+                ]
+            }, {
+                include: path.resolve(__dirname, 'src'),
+                exclude: /node_modules/,
+                test: /\.js$/,
+                use: [{
+                    loader: "babel-loader",
+                    options: {
+                        presets: ['@babel/preset-env'],
+                        plugins: [
+                            ["@babel/plugin-proposal-decorators", {"legacy": true}],
+                            ["@babel/plugin-proposal-class-properties", {"loose": true}],
+                            ['@babel/plugin-transform-runtime']
+                        ]
+                    }
+                }]
+            }]
+    }
+};
+```
+
+
+
