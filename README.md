@@ -3203,5 +3203,41 @@ module.exports = {
 };
 ```
 
+## 打包多页应用
+
+有时候我们会打包多页应用，那说明是有多个入口，以及多个出口
+
+```javascript
+let path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+    mode: "development",
+    entry: {//多个入口
+        home: './src/home.js',
+        other: './src/other.js'
+    },
+    output: {
+        //[name]，就是home和other
+        filename: "[name].js",
+        path: path.resolve(__dirname, 'dist')
+    },
+    plugins: [
+        //多个html页面
+        new HtmlWebpackPlugin({
+            template: "./src/index.html",
+            filename: "index.html",
+            chunks: ['other']//这里的意思是我需要引入哪个js模块
+        }),
+        new HtmlWebpackPlugin({
+            template: "./src/index2.html",
+            filename: "index2.html",
+            chunks: ['home']
+        }),
+    ]
+};
+
+```
+
 
 
