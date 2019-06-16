@@ -3239,5 +3239,51 @@ module.exports = {
 
 ```
 
+## 配置source-map
 
+我们会有一个需求，当我们的js文件经过打包处理之后，如果报错了，是找不到报错的地方的（因为都被压缩在一行里），那该怎么办呢？配置source-map（源码映射）即可
+
+```javascript
+let path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+    mode: "production",
+    entry: './src/home.js',
+    output: {
+        filename: "index.js",
+        path: path.resolve(__dirname, 'dist')
+    },
+    //源码映射
+    devtool: "source-map",//会单独生成一个source-map文件，当出错了，会标识当前报错的列和行
+    //devtool: "eval-source-map",//不会单独生成一个source-map文件，当出错了，会标识当前报错的列和行
+    // devtool: "cheap-module-source-map",
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: "./src/index.html",
+            filename: "index.html"
+        })
+    ],
+    module: {
+        rules: [
+            {
+                test : '/\.js$/',
+                use: {
+                    loader: "babel-loader",
+                    options: {
+                        presets:['@babel/preset-env']
+                    }
+                }
+            }
+        ]
+    }
+};
+```
+
+一共有四种devtool模式
+
+- source-map
+- eval-source-map
+- module-source-map
+- module-eval-source-map
 
