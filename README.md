@@ -2821,5 +2821,61 @@ Action，根据个人的理解，其实就是对应着以前 Vue 的 methods。�
   
   ```
 
+  # Day 12
+
+## 转化为 es5语法
+
+- 需要三个loader
+  - babel-loader
+  - @babel/preset-env
+  - @babel/core
+
+- ```javascript
+  let path = require('path');
+  const HtmlWebpackPlugin = require('html-webpack-plugin');
+  const MiniCssExtractPlugin = require('mini-css-extract-plugin');
   
+  module.exports = {
+      mode: "development",
+      entry: './src/index.js',
+      output: {
+          filename: "bundle.js",
+          path: path.resolve(__dirname, 'dist')
+      },
+      plugins: [
+          new HtmlWebpackPlugin({
+              template: "./src/index2.html",
+              filename: "index2.html"
+          }),
+          new MiniCssExtractPlugin({
+              filename: "main.css"
+          })
+      ],
+      module: {
+          rules: [{
+              test: /\.css$/,
+              use: [
+                  MiniCssExtractPlugin.loader,
+                  'css-loader', 
+                  'postcss-loader'
+              ]
+          },{
+              test:/\.js$/,
+              use : [{
+                  loader: "babel-loader",
+                  options: {
+                      presets:['@babel/preset-env'],
+                      plugins:['@babel/plugin-proposal-class-properties']
+                  }
+              }]
+          }]
+      }
+  };
+  
+  ```
+
+- 学到这里，发现了几个非常重要的网站
+- webpack官网：<https://www.webpackjs.com/>
+- npm官网（介绍各种插件用法）：<https://www.npmjs.com/>
+- babel官网（介绍各种babel用法）：<https://babeljs.io/>
 
