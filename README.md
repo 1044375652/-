@@ -3307,5 +3307,60 @@ module.exports = {
 上述代码的时间的单位都是毫秒
 ```
 
+## 防抖
 
+### 以下文章参考过薄荷前端<https://github.com/BooheeFE/weekly>
+
+#### 解释：在事件被触发n秒后再执行回调，如果在这n秒内又被触发，则重新计时。
+
+直接上代码
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<input type="text" name="" id="app">
+<script type="text/javascript">
+	// 以下举了一个输入框做例子
+	let app = document.getElementById('app');
+
+	// 模拟用户发起ajax请求
+	function ajax(content){
+		console.log("request : " + content);
+	}
+
+	// 加上事件监听
+	app.addEventListener('keyup',function(e){
+		debounce(e.target.value);
+	});
+
+
+	// 就是这里防抖
+	// 防抖利用了setTimeout方法
+	function debounceAjax(func,delay){
+		let that = this;
+		return function(args){
+			// 当在限定的时间内再次触发，就会把上一次的函数的执行去掉
+			clearTimeout(func.id);
+			// 这里用了一个id,来接受setTimeout返回的参数。（每次调用setTimeout都会返回一个参数）
+			func.id = setTimeout(function(){
+				// 重新设定需要执行的函数
+				func(args);
+				// 网上是这样写的
+				// func.call(that,args);
+			},delay);
+		}
+	}
+
+	// 这里有个需要注意的地方，用变量debounce接受debounceAjax的返回值，而debounce的返回值是一个函数，然后我们才能在事件监听上传递我们的参数给ajax方法
+	let debounce = debounceAjax(ajax,500);
+</script>
+</body>
+</html>
+```
+
+所以，防抖，个人感觉就是执行最新的函数。例如，5 s 内如果有事件不断触发，那只会执行最后一次，即触发完最新的函数后，在规定的时间内，没有其他事件触发，就执行这个方法。
 
