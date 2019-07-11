@@ -3434,3 +3434,65 @@ module.exports = {
 
 节流就是在一个时间周期内，只会执行用户第一次的输入，并且在这个周期内，其他输入不给予理会
 
+## 研究一段代码（来自节流的疑惑）
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<input type="text" name="" id="app">
+<script type="text/javascript">
+	let app = document.getElementById('app');
+	app.addEventListener('keyup',function(e){
+		throttle(e.target.value);
+	});
+	function ajax(content){
+		console.log(content);
+	}
+	function throttleAjax(func,delay){
+		let last;
+		return function(args){
+			let now = Date.now();
+			if(last && now < last + delay){
+
+			}else{
+				last = now;
+				func(args);
+			}	
+		}
+	}
+	function throttleAjax2(func,delay){
+		let last;
+		let now = Date.now();
+		if(last && now < last + delay){
+			
+		}else{
+			last = now;
+			return function(args){
+				func(args);
+			}
+		}
+	}
+	let throttle = throttleAjax(ajax,1000);
+</script>
+</body>
+</html>
+```
+
+#### throttleAjax是观看网上的代码后写的
+
+#### throttleAjax2是自己写的
+
+#### 他们有什么区别呢？
+
+#### 我们看调用
+
+#### let throttle = throttleAjax(参数，参数) | let throttle = throttleAjax2(参数，参数)
+
+#### 在第一个函数中，我返回的是一个函数的引用，逻辑的判断都在返回的函数里面。但我们循环调用的时候，因为接收的是函数的引用，并且判断的逻辑也在函数里。所以，每次循环都会进行判断。
+
+#### 而第二个函数，是先经过逻辑判断，最后才返回一个函数的引用。但是，放到一个循环中，仅仅只是函数的引用，里面们没有判断的逻辑了，导致不能判断！！！
+
