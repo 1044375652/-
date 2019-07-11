@@ -3364,3 +3364,73 @@ module.exports = {
 
 所以，防抖，个人感觉就是执行最新的函数。例如，5 s 内如果有事件不断触发，那只会执行最后一次，即触发完最新的函数后，在规定的时间内，没有其他事件触发，就执行这个方法。
 
+## 节流
+
+### 以下文章参考过薄荷前端<https://github.com/BooheeFE/weekly>
+
+#### 解释：在规定的时间内，只会触发第一次的函数，剩下事件的触发，都不会被调用，直到规定的时间结束
+
+直接上代码
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<input type="text" name="" id="app">
+<script type="text/javascript">
+	let app = document.getElementById('app');
+
+	app.addEventListener('keyup',function(e){
+		throttle(e.target.value);
+	});
+
+	// 模拟要进行的操作
+	function ajax(content){
+		console.log(content);
+	}
+
+	// 这就是节流
+	function throttleAjax(func,delay){
+		// 用来记录用户第一次输入的时间，当一个周期结束后，重新赋值
+		let last;
+		return function(args){
+			// 接受用户输入的时间，用来判断是否在一个周期内
+			let now = Date.now();
+			if(last && now < last + delay){// 当用户输入的时间距离第一次输入的时间还在一个周期内，就说什么也不干
+
+			}else{
+				// 当超过周期了，就把最新的时间重新赋值
+				last = now;
+				// 然后调起函数
+				func(args);
+				// 网上是这样写的
+				// func.apply(上下文,arguments);
+			}	
+		}
+	}
+
+	function throttleAjax2(func,delay){
+		let last;
+		let now = Date.now();
+		if(last && now < last + delay){
+			
+		}else{
+			last = now;
+			return function(args){
+				func(args);
+			}
+		}
+	}
+
+	let throttle = throttleAjax(ajax,1000);
+
+</script>
+</body>
+</html>
+```
+
+节流就是在一个时间周期内，只会执行用户第一次的输入，并且在这个周期内，其他输入不给予理会
+
